@@ -1,9 +1,31 @@
 package ccwc
 
-func GetCounts(str string) int {
-	return countCharacters(str)
+import (
+	"fmt"
+	"os"
+)
+
+type WordCountOptions struct {
+	Characters bool
 }
 
-func countCharacters(str string) int {
-	return len(str)
+func WordCount(filepath string, options WordCountOptions) (string, error) {
+	content, err := os.ReadFile(filepath)
+	if err != nil {
+		return "", err
+	}
+
+	counts := GetCounts(string(content))
+
+	wordCountString := fmt.Sprintf("%d %s", counts, filepath)
+
+	return wordCountString, nil
+}
+
+func GetCounts(content string) int {
+	return countCharacters(content)
+}
+
+func countCharacters(content string) int {
+	return len(content)
 }
