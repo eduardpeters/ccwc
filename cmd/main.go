@@ -1,17 +1,20 @@
 package main
 
 import (
+	"flag"
 	"fmt"
-	"os"
 
 	ccwc "github.com/eduardpeters/ccwc/internal"
 )
 
 func main() {
-	filePath := os.Args[2]
+	characterCount := flag.Bool("c", false, "Count characters")
+	flag.Parse()
+
+	filePath := flag.Arg(0)
 
 	options := ccwc.WordCountOptions{
-		Characters: true,
+		Characters: *characterCount,
 	}
 
 	result, err := ccwc.WordCount(filePath, options)
