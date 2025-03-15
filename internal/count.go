@@ -7,6 +7,7 @@ import (
 
 type WordCountOptions struct {
 	Characters bool
+	Lines      bool
 }
 
 type WordCountResults struct {
@@ -22,7 +23,14 @@ func WordCount(filepath string, options WordCountOptions) (string, error) {
 
 	counts := getCounts(string(content))
 
-	wordCountString := fmt.Sprintf("%d %s", counts.characters, filepath)
+	var wordCountString string
+
+	if options.Characters {
+		wordCountString = fmt.Sprintf("%d %s", counts.characters, filepath)
+	}
+	if options.Lines {
+		wordCountString = fmt.Sprintf("%d %s", counts.lines, filepath)
+	}
 
 	return wordCountString, nil
 }
@@ -39,11 +47,7 @@ func countCharacters(content string) int {
 }
 
 func countLines(content string) int {
-	if len(content) == 0 {
-		return 0
-	}
-
-	count := 1
+	count := 0
 
 	for _, c := range content {
 		if c == '\n' {

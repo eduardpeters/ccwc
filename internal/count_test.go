@@ -20,9 +20,11 @@ func TestLineCount(t *testing.T) {
 		input string
 		want  int
 	}{
-		{"Should count one line", "Lorem ipsum", 1},
-		{"Should count three lines", "Lorem\nipsum\ndolor sit amet", 3},
 		{"Should count no lines", "", 0},
+		{"Should still count no lines", "Lorem ipsum", 0},
+		{"Should count three lines", "Lorem\nipsum\ndolor sit amet", 2},
+		{"Should count one line", "Lorem\nipsum", 1},
+		{"Should count two lines", "\n\n", 2},
 	}
 
 	for _, tt := range lineTests {
