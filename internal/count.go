@@ -9,21 +9,29 @@ type WordCountOptions struct {
 	Characters bool
 }
 
+type WordCountResults struct {
+	characters int
+	lines      int
+}
+
 func WordCount(filepath string, options WordCountOptions) (string, error) {
 	content, err := os.ReadFile(filepath)
 	if err != nil {
 		return "", err
 	}
 
-	counts := GetCounts(string(content))
+	counts := getCounts(string(content))
 
-	wordCountString := fmt.Sprintf("%d %s", counts, filepath)
+	wordCountString := fmt.Sprintf("%d %s", counts.characters, filepath)
 
 	return wordCountString, nil
 }
 
-func GetCounts(content string) int {
-	return countCharacters(content)
+func getCounts(content string) WordCountResults {
+	return WordCountResults{
+		characters: countCharacters(content),
+		lines:      0,
+	}
 }
 
 func countCharacters(content string) int {
