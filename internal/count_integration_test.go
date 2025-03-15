@@ -16,11 +16,23 @@ func TestCountingFileCharactersOutput(t *testing.T) {
 
 	result, err := ccwc.WordCount(test_file_path, test_options)
 
+	assertNoError(t, err)
+
+	assertEqualStrings(t, result, want)
+}
+
+func assertNoError(t *testing.T, err error) {
+	t.Helper()
+
 	if err != nil {
 		t.Fatal("Got an unexpected error")
 	}
+}
 
-	if result != want {
-		t.Errorf("got %q, want %q", result, want)
+func assertEqualStrings(t *testing.T, got, want string) {
+	t.Helper()
+
+	if got != want {
+		t.Errorf("got %q, want %q", got, want)
 	}
 }
