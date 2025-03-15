@@ -4,15 +4,18 @@ import (
 	"fmt"
 	"os"
 	"unicode"
+	"unicode/utf8"
 )
 
 type WordCountOptions struct {
+	Bytes      bool
 	Characters bool
 	Lines      bool
 	Words      bool
 }
 
 type WordCountResults struct {
+	bytes      int
 	characters int
 	lines      int
 	words      int
@@ -28,6 +31,9 @@ func WordCount(filepath string, options WordCountOptions) (string, error) {
 
 	var wordCountString string
 
+	if options.Bytes {
+		wordCountString = fmt.Sprintf("%d %s", counts.bytes, filepath)
+	}
 	if options.Characters {
 		wordCountString = fmt.Sprintf("%d %s", counts.characters, filepath)
 	}
@@ -43,14 +49,19 @@ func WordCount(filepath string, options WordCountOptions) (string, error) {
 
 func getCounts(content string) WordCountResults {
 	return WordCountResults{
+		bytes:      countBytes(content),
 		characters: countCharacters(content),
 		lines:      countLines(content),
 		words:      countWords(content),
 	}
 }
 
-func countCharacters(content string) int {
+func countBytes(content string) int {
 	return len(content)
+}
+
+func countCharacters(content string) int {
+	return utf8.RuneCountInString(content)
 }
 
 func countLines(content string) int {

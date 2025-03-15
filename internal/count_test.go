@@ -4,11 +4,21 @@ import (
 	"testing"
 )
 
-func TestCharacterCount(t *testing.T) {
-	t.Run("It counts characters in a string", func(t *testing.T) {
+func TestByteCount(t *testing.T) {
+	t.Run("It counts bytes in a string", func(t *testing.T) {
 		testString := "Lorem ipsum"
 		got := getCounts(testString)
 		want := 11
+
+		assertEqualCounts(t, got.bytes, want)
+	})
+}
+
+func TestCharacterCount(t *testing.T) {
+	t.Run("It counts characters in a string", func(t *testing.T) {
+		testString := "❗hello"
+		got := getCounts(testString)
+		want := 6
 
 		assertEqualCounts(t, got.characters, want)
 	})
