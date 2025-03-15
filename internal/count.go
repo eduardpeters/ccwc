@@ -3,16 +3,19 @@ package ccwc
 import (
 	"fmt"
 	"os"
+	"unicode"
 )
 
 type WordCountOptions struct {
 	Characters bool
 	Lines      bool
+	Words      bool
 }
 
 type WordCountResults struct {
 	characters int
 	lines      int
+	words      int
 }
 
 func WordCount(filepath string, options WordCountOptions) (string, error) {
@@ -31,6 +34,9 @@ func WordCount(filepath string, options WordCountOptions) (string, error) {
 	if options.Lines {
 		wordCountString = fmt.Sprintf("%d %s", counts.lines, filepath)
 	}
+	if options.Words {
+		wordCountString = fmt.Sprintf("%d %s", counts.words, filepath)
+	}
 
 	return wordCountString, nil
 }
@@ -39,6 +45,7 @@ func getCounts(content string) WordCountResults {
 	return WordCountResults{
 		characters: countCharacters(content),
 		lines:      countLines(content),
+		words:      countWords(content),
 	}
 }
 
@@ -52,6 +59,24 @@ func countLines(content string) int {
 	for _, c := range content {
 		if c == '\n' {
 			count++
+		}
+	}
+
+	return count
+}
+
+func countWords(content string) int {
+	count := 0
+	inWord := false
+
+	for _, c := range content {
+		if unicode.IsSpace(c) {
+			inWord = false
+		} else {
+			if !inWord {
+				inWord = true
+				count++
+			}
 		}
 	}
 

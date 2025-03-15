@@ -36,6 +36,27 @@ func TestLineCount(t *testing.T) {
 	}
 }
 
+func TestWordCount(t *testing.T) {
+	var wordTests = []struct {
+		name  string
+		input string
+		want  int
+	}{
+		{"Should count no words", "", 0},
+		{"Should count one word", "Lorem\n", 1},
+		{"Should count two words", "Lorem ipsum", 2},
+		{"Should count five words accross lines", "Lorem ipsum\ndolor sit amet", 5},
+	}
+
+	for _, tt := range wordTests {
+		t.Run(tt.name, func(t *testing.T) {
+			got := getCounts(tt.input)
+
+			assertEqualCounts(t, got.words, tt.want)
+		})
+	}
+}
+
 func assertEqualCounts(t *testing.T, got, want int) {
 	t.Helper()
 

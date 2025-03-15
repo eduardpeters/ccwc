@@ -34,6 +34,19 @@ func TestCountingFileLinesOutput(t *testing.T) {
 	assertEqualStrings(t, result, want)
 }
 
+func TestCountingFileWordsOutput(t *testing.T) {
+	want := "58164 test.txt"
+	test_options := ccwc.WordCountOptions{
+		Words: true,
+	}
+
+	result, err := ccwc.WordCount(test_file_path, test_options)
+
+	assertNoError(t, err)
+
+	assertEqualStrings(t, result, want)
+}
+
 func assertNoError(t *testing.T, err error) {
 	t.Helper()
 
