@@ -21,6 +21,11 @@ type WordCountResults struct {
 	words      int
 }
 
+const (
+	DOUBLE_SPACING = "  "
+	SINGLE_SPACING = " "
+)
+
 func WordCount(filepath string, options WordCountOptions) (string, error) {
 	content, err := os.ReadFile(filepath)
 	if err != nil {
@@ -29,26 +34,63 @@ func WordCount(filepath string, options WordCountOptions) (string, error) {
 
 	counts := getCounts(string(content))
 
-	var wordCountString string
+	optionCount := countOptions(options)
+	if optionCount == 0 {
+		options.Lines = true
+		options.Words = true
+		options.Bytes = true
 
-	if !options.Bytes && !options.Characters && !options.Lines && !options.Words {
-		wordCountString = fmt.Sprintf("  %d  %d %d", counts.lines, counts.words, counts.bytes)
-	} else if options.Bytes {
-		wordCountString = fmt.Sprintf("%d", counts.bytes)
+		optionCount = 3
 	}
-	if options.Characters {
-		wordCountString = fmt.Sprintf("%d", counts.characters)
-	}
+
+	wordCountString := ""
+	spacing := ""
 	if options.Lines {
-		wordCountString = fmt.Sprintf("%d", counts.lines)
+		if optionCount > 1 {
+			spacing = DOUBLE_SPACING
+		}
+		wordCountString = fmt.Sprintf("%s%s%d", wordCountString, spacing, counts.lines)
 	}
 	if options.Words {
-		wordCountString = fmt.Sprintf("%d", counts.words)
+		if optionCount > 1 {
+			spacing = DOUBLE_SPACING
+		}
+		wordCountString = fmt.Sprintf("%s%s%d", wordCountString, spacing, counts.words)
+	}
+	if options.Characters {
+		if optionCount > 1 {
+			spacing = SINGLE_SPACING
+		}
+		wordCountString = fmt.Sprintf("%s%s%d", wordCountString, spacing, counts.characters)
+	}
+	if options.Bytes {
+		if optionCount > 1 {
+			spacing = SINGLE_SPACING
+		}
+		wordCountString = fmt.Sprintf("%s%s%d", wordCountString, spacing, counts.bytes)
 	}
 
 	wordCountString = fmt.Sprintf("%s %s", wordCountString, filepath)
 
 	return wordCountString, nil
+}
+
+func countOptions(options WordCountOptions) int {
+	optionCount := 0
+	if options.Bytes {
+		optionCount++
+	}
+	if options.Characters {
+		optionCount++
+	}
+	if options.Lines {
+		optionCount++
+	}
+	if options.Words {
+		optionCount++
+	}
+
+	return optionCount
 }
 
 func getCounts(content string) WordCountResults {
