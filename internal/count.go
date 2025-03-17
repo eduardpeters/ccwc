@@ -31,18 +31,22 @@ func WordCount(filepath string, options WordCountOptions) (string, error) {
 
 	var wordCountString string
 
-	if options.Bytes {
-		wordCountString = fmt.Sprintf("%d %s", counts.bytes, filepath)
+	if !options.Bytes && !options.Characters && !options.Lines && !options.Words {
+		wordCountString = fmt.Sprintf("  %d  %d %d", counts.lines, counts.words, counts.bytes)
+	} else if options.Bytes {
+		wordCountString = fmt.Sprintf("%d", counts.bytes)
 	}
 	if options.Characters {
-		wordCountString = fmt.Sprintf("%d %s", counts.characters, filepath)
+		wordCountString = fmt.Sprintf("%d", counts.characters)
 	}
 	if options.Lines {
-		wordCountString = fmt.Sprintf("%d %s", counts.lines, filepath)
+		wordCountString = fmt.Sprintf("%d", counts.lines)
 	}
 	if options.Words {
-		wordCountString = fmt.Sprintf("%d %s", counts.words, filepath)
+		wordCountString = fmt.Sprintf("%d", counts.words)
 	}
+
+	wordCountString = fmt.Sprintf("%s %s", wordCountString, filepath)
 
 	return wordCountString, nil
 }
