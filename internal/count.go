@@ -1,10 +1,8 @@
 package ccwc
 
 import (
-	"bufio"
 	"fmt"
 	"io"
-	"os"
 	"unicode"
 	"unicode/utf8"
 )
@@ -28,16 +26,8 @@ const (
 	SINGLE_SPACING = " "
 )
 
-func WordCount(filepath string, options WordCountOptions) (string, error) {
-	var content []byte
-	var err error
-
-	if filepath != "" {
-		content, err = os.ReadFile(filepath)
-	} else {
-		reader := bufio.NewReader(os.Stdin)
-		content, err = io.ReadAll(reader)
-	}
+func WordCount(source io.Reader, filepath string, options WordCountOptions) (string, error) {
+	content, err := io.ReadAll(source)
 	if err != nil {
 		return "", err
 	}

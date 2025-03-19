@@ -1,6 +1,7 @@
 package ccwc_test
 
 import (
+	"os"
 	"testing"
 
 	ccwc "github.com/eduardpeters/ccwc/internal"
@@ -13,8 +14,10 @@ func TestCountingFileBytesOutput(t *testing.T) {
 	test_options := ccwc.WordCountOptions{
 		Bytes: true,
 	}
+	source, err := os.Open(test_file_path)
+	assertNoError(t, err)
 
-	result, err := ccwc.WordCount(test_file_path, test_options)
+	result, err := ccwc.WordCount(source, test_file_path, test_options)
 
 	assertNoError(t, err)
 
@@ -26,8 +29,10 @@ func TestCountingFileCharactersOutput(t *testing.T) {
 	test_options := ccwc.WordCountOptions{
 		Characters: true,
 	}
+	source, err := os.Open(test_file_path)
+	assertNoError(t, err)
 
-	result, err := ccwc.WordCount(test_file_path, test_options)
+	result, err := ccwc.WordCount(source, test_file_path, test_options)
 
 	assertNoError(t, err)
 
@@ -39,8 +44,10 @@ func TestCountingFileLinesOutput(t *testing.T) {
 	test_options := ccwc.WordCountOptions{
 		Lines: true,
 	}
+	source, err := os.Open(test_file_path)
+	assertNoError(t, err)
 
-	result, err := ccwc.WordCount(test_file_path, test_options)
+	result, err := ccwc.WordCount(source, test_file_path, test_options)
 
 	assertNoError(t, err)
 
@@ -52,8 +59,10 @@ func TestCountingFileWordsOutput(t *testing.T) {
 	test_options := ccwc.WordCountOptions{
 		Words: true,
 	}
+	source, err := os.Open(test_file_path)
+	assertNoError(t, err)
 
-	result, err := ccwc.WordCount(test_file_path, test_options)
+	result, err := ccwc.WordCount(source, test_file_path, test_options)
 
 	assertNoError(t, err)
 
@@ -68,8 +77,10 @@ func TestCountingFileDefaultOutput(t *testing.T) {
 		Lines:      false,
 		Words:      false,
 	}
+	source, err := os.Open(test_file_path)
+	assertNoError(t, err)
 
-	result, err := ccwc.WordCount(test_file_path, test_options)
+	result, err := ccwc.WordCount(source, test_file_path, test_options)
 
 	assertNoError(t, err)
 

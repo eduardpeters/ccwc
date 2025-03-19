@@ -3,6 +3,7 @@ package main
 import (
 	"flag"
 	"fmt"
+	"os"
 
 	ccwc "github.com/eduardpeters/ccwc/internal"
 )
@@ -23,7 +24,12 @@ func main() {
 		Words:      *wordCount,
 	}
 
-	result, err := ccwc.WordCount(filePath, options)
+	source, err := os.Open(filePath)
+	if err != nil {
+		panic(err)
+	}
+
+	result, err := ccwc.WordCount(source, filePath, options)
 	if err != nil {
 		panic(err)
 	}
