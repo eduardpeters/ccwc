@@ -1,7 +1,9 @@
 package ccwc
 
 import (
+	"bufio"
 	"fmt"
+	"io"
 	"os"
 	"unicode"
 	"unicode/utf8"
@@ -27,7 +29,15 @@ const (
 )
 
 func WordCount(filepath string, options WordCountOptions) (string, error) {
-	content, err := os.ReadFile(filepath)
+	var content []byte
+	var err error
+
+	if filepath != "" {
+		content, err = os.ReadFile(filepath)
+	} else {
+		reader := bufio.NewReader(os.Stdin)
+		content, err = io.ReadAll(reader)
+	}
 	if err != nil {
 		return "", err
 	}
