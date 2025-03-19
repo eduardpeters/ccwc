@@ -3,6 +3,7 @@ package main
 import (
 	"flag"
 	"fmt"
+	"io"
 	"os"
 
 	ccwc "github.com/eduardpeters/ccwc/internal"
@@ -24,7 +25,13 @@ func main() {
 		Words:      *wordCount,
 	}
 
-	source, err := os.Open(filePath)
+	var source io.Reader
+	var err error
+	if filePath != "" {
+		source, err = os.Open(filePath)
+	} else {
+		source = os.Stdin
+	}
 	if err != nil {
 		panic(err)
 	}

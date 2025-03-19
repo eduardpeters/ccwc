@@ -2,6 +2,7 @@ package ccwc_test
 
 import (
 	"os"
+	"strings"
 	"testing"
 
 	ccwc "github.com/eduardpeters/ccwc/internal"
@@ -81,6 +82,23 @@ func TestCountingFileDefaultOutput(t *testing.T) {
 	assertNoError(t, err)
 
 	result, err := ccwc.WordCount(source, test_file_path, test_options)
+
+	assertNoError(t, err)
+
+	assertEqualStrings(t, result, want)
+}
+
+func TestCountingReaderDefaultOutput(t *testing.T) {
+	want := "  0  5 25"
+	test_options := ccwc.WordCountOptions{
+		Bytes:      false,
+		Characters: false,
+		Lines:      false,
+		Words:      false,
+	}
+	source := strings.NewReader("this is some piped input?")
+
+	result, err := ccwc.WordCount(source, "", test_options)
 
 	assertNoError(t, err)
 

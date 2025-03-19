@@ -70,7 +70,9 @@ func WordCount(source io.Reader, filepath string, options WordCountOptions) (str
 		wordCountString = fmt.Sprintf("%s%s%d", wordCountString, spacing, counts.bytes)
 	}
 
-	wordCountString = fmt.Sprintf("%s %s", wordCountString, filepath)
+	if filepath != "" {
+		wordCountString = fmt.Sprintf("%s %s", wordCountString, filepath)
+	}
 
 	return wordCountString, nil
 }
