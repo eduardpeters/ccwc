@@ -1,13 +1,16 @@
 package ccwc
 
 import (
+	"bufio"
+	"strings"
 	"testing"
 )
 
 func TestByteCount(t *testing.T) {
 	t.Run("It counts bytes in a string", func(t *testing.T) {
 		testString := "Lorem ipsum"
-		got := getCounts(testString)
+		reader := strings.NewReader(testString)
+		got, _ := getCounts(*bufio.NewReader(reader))
 		want := 11
 
 		assertEqualCounts(t, got.bytes, want)
@@ -17,7 +20,8 @@ func TestByteCount(t *testing.T) {
 func TestCharacterCount(t *testing.T) {
 	t.Run("It counts characters in a string", func(t *testing.T) {
 		testString := "❗hello"
-		got := getCounts(testString)
+		reader := strings.NewReader(testString)
+		got, _ := getCounts(*bufio.NewReader(reader))
 		want := 6
 
 		assertEqualCounts(t, got.characters, want)
@@ -39,7 +43,8 @@ func TestLineCount(t *testing.T) {
 
 	for _, tt := range lineTests {
 		t.Run(tt.name, func(t *testing.T) {
-			got := getCounts(tt.input)
+			reader := strings.NewReader(tt.input)
+			got, _ := getCounts(*bufio.NewReader(reader))
 
 			assertEqualCounts(t, got.lines, tt.want)
 		})
@@ -60,7 +65,8 @@ func TestWordCount(t *testing.T) {
 
 	for _, tt := range wordTests {
 		t.Run(tt.name, func(t *testing.T) {
-			got := getCounts(tt.input)
+			reader := strings.NewReader(tt.input)
+			got, _ := getCounts(*bufio.NewReader(reader))
 
 			assertEqualCounts(t, got.words, tt.want)
 		})

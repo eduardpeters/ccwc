@@ -1,10 +1,10 @@
 package ccwc
 
 import (
+	"bufio"
 	"fmt"
 	"io"
 	"unicode"
-	"unicode/utf8"
 )
 
 type WordCountOptions struct {
@@ -27,12 +27,10 @@ const (
 )
 
 func WordCount(source io.Reader, filepath string, options WordCountOptions) (string, error) {
-	content, err := io.ReadAll(source)
+	counts, err := getCounts(*bufio.NewReader(source))
 	if err != nil {
 		return "", err
 	}
-
-	counts := getCounts(string(content))
 
 	optionCount := countOptions(options)
 	if optionCount == 0 {
@@ -95,49 +93,49 @@ func countOptions(options WordCountOptions) int {
 	return optionCount
 }
 
-func getCounts(content string) WordCountResults {
-	return WordCountResults{
-		bytes:      countBytes(content),
-		characters: countCharacters(content),
-		lines:      countLines(content),
-		words:      countWords(content),
-	}
-}
+func getCounts(reader bufio.Reader) (WordCountResults, error) {
+	results := WordCountResults{}
 
-func countBytes(content string) int {
-	return len(content)
-}
-
-func countCharacters(content string) int {
-	return utf8.RuneCountInString(content)
-}
-
-func countLines(content string) int {
-	count := 0
-
-	for _, c := range content {
-		if c == '\n' {
-			count++
+	for {
+		line, err := reader.ReadString('\n')
+		lineLength := len(line)
+		if lineLength == 0 && err != nil {
+			if err == io.EOF {
+				break
+			}
+			return results, err
 		}
-	}
 
-	return count
-}
+		results.bytes += lineLength
 
-func countWords(content string) int {
-	count := 0
-	inWord := false
+		wordCount := 0
+		inWord := false
 
-	for _, c := range content {
-		if unicode.IsSpace(c) {
-			inWord = false
-		} else {
-			if !inWord {
-				inWord = true
-				count++
+		for _, c := range line {
+			results.characters++
+
+			if unicode.IsSpace(c) {
+				if c == '\n' {
+					results.lines++
+				}
+				inWord = false
+			} else {
+				if !inWord {
+					inWord = true
+					wordCount++
+				}
 			}
 		}
+
+		results.words += wordCount
+
+		if err != nil {
+			if err == io.EOF {
+				break
+			}
+			return results, err
+		}
 	}
 
-	return count
+	return results, nil
 }
