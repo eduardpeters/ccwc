@@ -5,6 +5,10 @@ binary_name = ccwc
 test:
 	go test ./internal
 
+.PHONY: benchmark
+benchmark:
+	go test -bench=. ./internal
+
 .PHONY: build
 build:
 	go build -o ${binary_name} ${main_package_path}
